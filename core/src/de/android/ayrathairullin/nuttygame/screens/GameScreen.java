@@ -193,4 +193,5 @@ public class GameScreen extends ScreenAdapter{
     public void drawDebug() {
         debugRenderer.render(world, camera.combined);
     }
+
 }
