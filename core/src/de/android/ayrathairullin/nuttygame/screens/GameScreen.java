@@ -24,7 +24,7 @@ public class GameScreen extends ScreenAdapter{
     private static final float UNITS_PER_METER = 16;
 
     private World world;
-    private Box2DDebugRenderer dDebugRenderer;
+    private Box2DDebugRenderer debugRenderer;
     private Body body;
 
     private Camera camera;
@@ -40,7 +40,7 @@ public class GameScreen extends ScreenAdapter{
     @Override
     public void show() {
         world = new World(new Vector2(0, - 10), true);
-        dDebugRenderer = new Box2DDebugRenderer();
+        debugRenderer = new Box2DDebugRenderer();
         body = createBody();
         body.setTransform(100, 120, 0);
         camera = new OrthographicCamera();
@@ -83,6 +83,6 @@ public class GameScreen extends ScreenAdapter{
     }
 
     private void drawDebug() {
-        dDebugRenderer.render(world, camera.combined);
+        debugRenderer.render(world, camera.combined);
     }
 }
