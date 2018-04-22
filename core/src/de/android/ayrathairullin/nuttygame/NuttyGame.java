@@ -4,7 +4,7 @@ import com.badlogic.gdx.Game;
 import com.badlogic.gdx.assets.AssetManager;
 import com.badlogic.gdx.physics.box2d.Box2D;
 
-import de.android.ayrathairullin.nuttygame.screens.LoadingScreen;
+import de.android.ayrathairullin.nuttygame.screens.GameScreen;
 
 public class NuttyGame extends Game {
 	private final AssetManager assetManager = new AssetManager();
@@ -12,7 +12,7 @@ public class NuttyGame extends Game {
 	@Override
 	public void create () {
 		Box2D.init();
-		setScreen(new LoadingScreen(this));
+		setScreen(new GameScreen(this));
 	}
 
 	public AssetManager getAssetManager() {
