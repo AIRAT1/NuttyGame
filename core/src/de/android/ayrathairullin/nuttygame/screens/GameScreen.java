@@ -3,15 +3,14 @@ package de.android.ayrathairullin.nuttygame.screens;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.ScreenAdapter;
-import com.badlogic.gdx.graphics.Camera;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
+import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
+import com.badlogic.gdx.maps.tiled.TiledMap;
+import com.badlogic.gdx.maps.tiled.renderers.OrthogonalTiledMapRenderer;
 import com.badlogic.gdx.math.Vector2;
-import com.badlogic.gdx.physics.box2d.Body;
-import com.badlogic.gdx.physics.box2d.BodyDef;
 import com.badlogic.gdx.physics.box2d.Box2DDebugRenderer;
-import com.badlogic.gdx.physics.box2d.PolygonShape;
 import com.badlogic.gdx.physics.box2d.World;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
@@ -23,13 +22,16 @@ public class GameScreen extends ScreenAdapter{
     private static final float WORLD_HEIGHT = 544;
     private static final float UNITS_PER_METER = 16;
 
+    private OrthographicCamera camera;
+    private Viewport viewport;
+
+    private SpriteBatch batch;
+    private TiledMap tiledMap;
+    private OrthogonalTiledMapRenderer orthogonalTiledMapRenderer;
+
+    private ShapeRenderer shapeRenderer;
     private World world;
     private Box2DDebugRenderer debugRenderer;
-    private Body body;
-
-    private Camera camera;
-    private Viewport viewport;
-    private ShapeRenderer shapeRenderer;
 
     private final NuttyGame nuttyGame;
 
@@ -39,14 +41,15 @@ public class GameScreen extends ScreenAdapter{
 
     @Override
     public void show() {
-        world = new World(new Vector2(0, - 10), true);
+        world = new World(new Vector2(0, -10), true);
         debugRenderer = new Box2DDebugRenderer();
-        body = createBody();
-        body.setTransform(100, 120, 0);
         camera = new OrthographicCamera();
         viewport = new FitViewport(WORLD_WIDTH, WORLD_HEIGHT, camera);
         viewport.apply(true);
-        shapeRenderer = new ShapeRenderer();
+        batch = new SpriteBatch();
+        tiledMap = nuttyGame.getAssetManager().get("nuttybirds.tmx");
+        orthogonalTiledMapRenderer = new OrthogonalTiledMapRenderer(tiledMap, batch);
+        orthogonalTiledMapRenderer.setView(camera);
     }
 
     @Override
@@ -56,25 +59,8 @@ public class GameScreen extends ScreenAdapter{
 
     @Override
     public void render(float delta) {
-        update(delta);
         clearScreen();
-        drawDebug();
-    }
-
-    private Body createBody() {
-        BodyDef def = new BodyDef();
-        def.type = BodyDef.BodyType.DynamicBody;
-        Body box = world.createBody(def);
-        PolygonShape poly = new PolygonShape();
-        poly.setAsBox(60 / UNITS_PER_METER, 60 / UNITS_PER_METER);
-        box.createFixture(poly, 1);
-        poly.dispose();
-        return box;
-    }
-
-    private void update(float delta) {
-        world.step(delta, 6, 2);
-        body.setAwake(true);
+        draw();
     }
 
     private void clearScreen() {
@@ -82,7 +68,9 @@ public class GameScreen extends ScreenAdapter{
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
     }
 
-    private void drawDebug() {
-        debugRenderer.render(world, camera.combined);
+    private void draw() {
+        batch.setProjectionMatrix(camera.projection);
+        batch.setTransformMatrix(camera.view);
+        orthogonalTiledMapRenderer.render();
     }
 }
