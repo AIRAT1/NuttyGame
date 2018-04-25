@@ -7,13 +7,11 @@ import com.badlogic.gdx.maps.tiled.TiledMap;
 import com.badlogic.gdx.maps.tiled.TmxMapLoader;
 import com.badlogic.gdx.physics.box2d.Box2D;
 
-import de.android.ayrathairullin.nuttygame.screens.LoadingScreen;
-
 public class NuttyGame extends Game {
 	private final AssetManager assetManager = new AssetManager();
-	
+
 	@Override
-	public void create () {
+	public void create() {
 		Box2D.init();
 		assetManager.setLoader(TiledMap.class, new TmxMapLoader(new InternalFileHandleResolver()));
 		setScreen(new LoadingScreen(this));
