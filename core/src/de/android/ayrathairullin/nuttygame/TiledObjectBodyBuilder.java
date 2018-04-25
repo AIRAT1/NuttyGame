@@ -10,6 +10,5 @@ public class TiledObjectBodyBuilder {
 
     public static void buildBuildingBodies(TiledMap tiledMap, World world) {
 
-
     }
 }
